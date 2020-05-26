@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+GoolsDevApp/appsettings.json
+GoolsDevApp/appsettings.Development.json
+GoolsDevApp/Properties/launchSettings.json
+GoolsDevApp/appsettings.Development.json

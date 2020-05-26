@@ -23,6 +23,11 @@ namespace GoolsDevApp.Controllers
             return View();
         }
 
+        public  IActionResult TestIndex()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

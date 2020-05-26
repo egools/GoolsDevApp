@@ -11,7 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Mvc;
+using GoolsDevApp.DAL;
 
 namespace GoolsDevApp
 {
@@ -27,10 +28,21 @@ namespace GoolsDevApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var islocal = Configuration.GetValue<bool>("IsLocalHost");
             services.AddControllersWithViews();
 
-            services.AddDbContext<GoolsDevContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("GoolsDevContext")));
+            if (islocal)
+            {
+                services.AddDbContext<GoolsDevContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("GoolsDevContextDebug")));
+            }
+            else
+            {
+                services.AddDbContext<GoolsDevContext>(options =>
+                    options.UseMySql(Configuration.GetConnectionString("GoolsDevContext")));
+            }
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,18 +58,18 @@ namespace GoolsDevApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Thingies}/{action=Index}/{id?}");
             });
         }
     }
