@@ -379,5 +379,5 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/windows,visualstudio
-GoolsDevApp/appsettings.Development.json
-GoolsDevApp/appsettings.json
+**/appsettings.development.json
+**/appsettings.staging.json
