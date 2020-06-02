@@ -15,7 +15,7 @@ namespace GoolsDevApp.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("Testing");
+            //modelBuilder.HasDefaultSchema("Testing");
             modelBuilder.Entity<Thingy>().Property(s => s.ThingyId).ValueGeneratedOnAdd();
         }
 

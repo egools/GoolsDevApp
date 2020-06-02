@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
 using GoolsDevApp.DAL;
 
 namespace GoolsDevApp
@@ -28,20 +28,19 @@ namespace GoolsDevApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var islocal = Configuration.GetValue<bool>("IsLocalHost");
+
             services.AddControllersWithViews();
+            services.AddDbContext<GoolsDevContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("GoolsDevContext")));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+        }
 
-            if (islocal)
-            {
-                services.AddDbContext<GoolsDevContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("GoolsDevContextDebug")));
-            }
-            else
-            {
-                services.AddDbContext<GoolsDevContext>(options =>
-                    options.UseMySql(Configuration.GetConnectionString("GoolsDevContext")));
-            }
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
 
+            services.AddControllersWithViews();
+            services.AddDbContext<GoolsDevContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("GoolsDevContext")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
@@ -59,17 +58,15 @@ namespace GoolsDevApp
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
             app.UseAuthentication();
-
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseWelcomePage();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Thingies}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
